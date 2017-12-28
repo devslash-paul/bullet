@@ -40,9 +40,6 @@ export default class App extends React.Component {
         return (
             <svg height="100%" width="100%" onClick={this.onClick}>
                 {line}
-                {/* <text x="5" y="10"> */}
-                    {/* {mouseX + ',' + mouseY} */}
-                {/* </text> */}
                 <Grid coords={coords}/>
                 <Circle change={change} />
             </svg>

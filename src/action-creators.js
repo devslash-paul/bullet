@@ -1,5 +1,12 @@
-import {GLOBAL_CLICK} from './actions'
+import { GLOBAL_CLICK, RESIZE } from "./actions";
 
 export const globalClick = () => {
-    type: GLOBAL_CLICK
-}
+  type: GLOBAL_CLICK;
+};
+
+export const resized = (width, height) => {
+  type: RESIZE;
+  payload: {
+    width, height
+  }
+};
