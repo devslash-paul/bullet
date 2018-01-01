@@ -1,8 +1,12 @@
 import React from 'react';
 import Grid from './Grid.jsx';
 import Circle from './Circle.jsx';
+import { globalClick } from '../action-creators.js'
 
-export default class App extends React.Component {
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+class App extends React.Component {
 
     componentWillMount = () => {
         this.updateDimensions();
@@ -38,7 +42,7 @@ export default class App extends React.Component {
                 const line = undefined;
 
         return (
-            <svg height="100%" width="100%" onClick={this.onClick}>
+            <svg height="100%" width="100%" onClick={this.props.globalClick}>
                 {line}
                 <Grid coords={coords}/>
                 <Circle change={change} />
@@ -46,3 +50,13 @@ export default class App extends React.Component {
         )
     }
 }
+
+const mapDispatchToProps = dispatch => {
+    return {
+        globalClick: (e) => {
+            dispatch(globalClick(e))
+        }
+    }
+}
+
+export default connect(undefined, mapDispatchToProps)(App)
