@@ -1,12 +1,21 @@
 import React from 'react';
 import Grid from './Grid.jsx';
 import Circle from './Circle.jsx';
-import { globalClick } from '../action-creators.js'
+import FollowingLine from './Line.jsx';
+import { globalClick, clickUp } from '../action-creators.js'
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 class App extends React.Component {
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            currentX: 0,
+            currentY: 0
+        }
+    }
 
     componentWillMount = () => {
         this.updateDimensions();
@@ -16,8 +25,12 @@ class App extends React.Component {
         window.addEventListener('resize', this.updateDimensions);
     }
 
+    updateMouse = (e) => {
+        this.setState(state => ({currentX: e.clientX, currentY: e.clientY}));
+    }
+
     updateDimensions = () => {
-        this.setState({width: window.innerWidth, height: window.innerHeight});
+        this.setState(state => ({width: window.innerWidth, height: window.innerHeight}));
     }
 
     onClick = () => {
@@ -37,13 +50,14 @@ class App extends React.Component {
             }
         }
 
-        // const line = circles[selectedId] ? 
-                // <line x1={circles[selectedId].props.cx} y1={circles[selectedId].props.cy} x2={mouseX} y2={mouseY}/> : undefined;
-                const line = undefined;
-
         return (
-            <svg height="100%" width="100%" onClick={this.props.globalClick}>
-                {line}
+            <svg 
+                height="100%" 
+                width="100%" 
+                onMouseDown={e => this.props.globalClick(e, coords)}
+                onMouseUp={this.props.clickUp}
+                >
+                <FollowingLine anchorX={this.props.x} anchorY={this.props.y}/>
                 <Grid coords={coords}/>
                 <Circle change={change} />
             </svg>
@@ -53,10 +67,20 @@ class App extends React.Component {
 
 const mapDispatchToProps = dispatch => {
     return {
-        globalClick: (e) => {
-            dispatch(globalClick(e))
+        globalClick: (e, coords) => {
+            dispatch(globalClick(e, coords))
+        },
+        clickUp: () => {
+            dispatch(clickUp())
         }
     }
 }
 
-export default connect(undefined, mapDispatchToProps)(App)
+const mapStateToProps = state => {
+    return {
+        x: state.entities.lines.lastClick.x,
+        y: state.entities.lines.lastClick.y
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)

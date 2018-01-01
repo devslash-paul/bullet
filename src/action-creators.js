@@ -1,14 +1,21 @@
-import { GLOBAL_CLICK, RESIZE } from "./actions";
+import { GLOBAL_CLICK, RESIZE, GLOBAL_CLICK_UP } from "./actions";
 
-export const globalClick = (event) => {
+import { closest } from "./utils.js";
+
+export const globalClick = (event, coords) => {
+  const closestCoord = closest(coords, event.clientX, event.clientY);
   return {
     type: GLOBAL_CLICK,
     payload: {
-      x: event.clientX,
-      y: event.clientY
+      x: closestCoord.x,
+      y: closestCoord.y
     }
   }
 }
+
+export const clickUp = () => ({
+  type: GLOBAL_CLICK_UP
+})
 
 export const resized = (width, height) => {
   type: RESIZE;
